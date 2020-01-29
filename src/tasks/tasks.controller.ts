@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Patch, Query,
+UsePipes, ValidationPipe,  } from '@nestjs/common';
 import { TasksService } from './tasks.service';
-import { Task } from './task.model';
+import { Task, TaskStatus } from './task.model';
 import { CreateTaskDto } from './dto/createTask.dto';
+import { GetTasksFilterDto } from './dto/getTasksFilterDto';
 
 @Controller('tasks')
 export class TasksController {
@@ -9,7 +11,7 @@ export class TasksController {
     constructor(private tasksService: TasksService) {}
 
     @Get()
-    getAllTasks(): Array<Task> {
+    getAllTasks(@Query() filterDto: GetTasksFilterDto): Array<Task> {
         return this.tasksService.getAllTasks();
     }
 
@@ -19,6 +21,7 @@ export class TasksController {
     }
 
     @Post()
+    @UsePipes(ValidationPipe)
     createTask(@Body() createTaskDto: CreateTaskDto): Task {
         return this.tasksService.createTask(createTaskDto);
     }
@@ -26,6 +29,14 @@ export class TasksController {
     @Delete('/:id')
     deleteTaskById(@Param('id') id: string): boolean {
         return this.tasksService.deleteTaskById(id);
+    }
+
+    @Patch('/:id/status')
+    updateTaskStatusById(
+        @Param('id') id: string,
+        @Body('status') status: TaskStatus
+    ): Task {
+        return this.tasksService.updateTaskStatusById(id, status);
     }
     
     

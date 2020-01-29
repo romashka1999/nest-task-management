@@ -12,6 +12,8 @@ export class TasksService {
         return [...this.tasks];
     }
 
+    getTasksWithfilters
+
     getTaskById(id: string): Task {
         return this.tasks.find( (task) => {
             task.id === id;
@@ -40,6 +42,12 @@ export class TasksService {
             }
         });
         return finded ? true: false;
+    }
+
+    updateTaskStatusById(id: string, status: TaskStatus): Task {
+        const task = this.getTaskById(id);
+        task.status = status;
+        return task;
     }
 
 }
