@@ -31,4 +31,15 @@ export class TasksService {
         return task;
     }
 
+    deleteTaskById(id: string): boolean{
+        let finded = false;
+        this.tasks.forEach((task, idx) => {
+            if(task.id === id) {
+                this.tasks.splice(idx, 1);
+                finded = true;
+            }
+        });
+        return finded ? true: false;
+    }
+
 }
