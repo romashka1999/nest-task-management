@@ -1,7 +1,7 @@
 import { Repository, EntityRepository } from "typeorm";
 import { User } from "./user.entity";
 import { SignInDto } from "./dto/signIn.dto";
-import { BadRequestException, ConflictException, InternalServerErrorException, UnauthorizedException } from "@nestjs/common";
+import { ConflictException, InternalServerErrorException } from "@nestjs/common";
 import { hashPassword } from "src/auth/helpers/hashPasswords";
 
 
@@ -30,16 +30,16 @@ export class UserRepository extends Repository<User> {
         return true;
     }
 
-    async signIn(signInDto: SignInDto): Promise<string> {
+    async signIn(signInDto: SignInDto): Promise<User> {
         const { username, password } = signInDto;
 
         const user = await this.findOne({username: username});
 
         if(user && await user.validatePassword(password))
         if(!user || user.password !== password) {
-            return 'token';
+            return user;
         } else {
-            throw new UnauthorizedException('invalid credentials');
+            return null;
         }
     }
 }
