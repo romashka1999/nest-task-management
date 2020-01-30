@@ -11,8 +11,8 @@ export class GetTasksFilterDto {
     search: string;
 
     @IsOptional()
-    offset: number;
+    page: number;
 
     @IsOptional()
-    limit: number;
+    pageSize: number;
 }
