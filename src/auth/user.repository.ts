@@ -1,7 +1,9 @@
 import { Repository, EntityRepository } from "typeorm";
 import { User } from "./user.entity";
 import { SignInDto } from "./dto/signIn.dto";
-import { BadRequestException } from "@nestjs/common";
+import { BadRequestException, ConflictException, InternalServerErrorException, UnauthorizedException } from "@nestjs/common";
+import { hashPassword } from "src/auth/helpers/hashPasswords";
+
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -9,12 +11,22 @@ export class UserRepository extends Repository<User> {
     async signUp(signUpDto: SignInDto): Promise<boolean> {
         const { username, password } = signUpDto;
 
+        const { salt, hashedPassword } = await hashPassword(password);// hash pass
         const user =  new User();
         user.username = username;
-        user.password = password;
+        user.password = hashedPassword;
+        user.salt = salt;
 
-        await user.save();
-
+        try {
+            await user.save();
+        } catch (error) {
+            if(error.code === '23505') {//duplicate username 
+                throw new ConflictException('usarname already exists');
+            } else {
+                throw new InternalServerErrorException();
+            }
+        }
+        
         return true;
     }
 
@@ -23,10 +35,11 @@ export class UserRepository extends Repository<User> {
 
         const user = await this.findOne({username: username});
 
+        if(user && await user.validatePassword(password))
         if(!user || user.password !== password) {
-            throw new BadRequestException('invalid credentials');
+            return 'token';
+        } else {
+            throw new UnauthorizedException('invalid credentials');
         }
-
-        return 'str';
     }
 }

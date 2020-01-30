@@ -3,7 +3,6 @@ UsePipes, ValidationPipe, ParseIntPipe } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { Task } from './task.entity';
 import { TaskStatusValidationpipe } from './pipes/taskStatusValidationPipe';
-import { stat } from 'fs';
 import { CreateTaskDto } from './dto/createTask.dto';
 import { GetTasksFilterDto } from './dto/getTasksFilterDto';
 

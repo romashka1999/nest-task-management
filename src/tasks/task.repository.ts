@@ -3,7 +3,7 @@ import { Task } from "./task.entity";
 import { CreateTaskDto } from "./dto/createTask.dto";
 import { TaskStatus } from "./taskStatus.enum";
 import { GetTasksFilterDto } from "./dto/getTasksFilterDto";
-import { pagination, Ipagination } from "src/shared/helpers/pagination";
+import { pagination, Ipagination } from "src/shared/pagination";
 
 @EntityRepository(Task)
 export class TaskRepository extends Repository<Task> {

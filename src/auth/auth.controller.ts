@@ -8,14 +8,12 @@ export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
     @Post('signUp')
-    @UsePipes(ValidationPipe)
-    signUp(@Body() signUpDto: SignInDto): Promise<boolean> {
+    signUp(@Body(ValidationPipe) signUpDto: SignInDto): Promise<boolean> {
         return this.authService.signUp(signUpDto);
     }
 
     @Post('signIn')
-    @UsePipes(ValidationPipe)
-    signIn(@Body() signInDto: SignInDto): Promise<string> {
+    signIn(@Body(ValidationPipe) signInDto: SignInDto): Promise<string> {
         return this.authService.signIn(signInDto);
     }
 }
