@@ -3,7 +3,7 @@ import { Repository, EntityRepository } from "typeorm";
 import { Task } from "./task.entity";
 import { CreateTaskDto } from "./dtos/createTask.dto";
 import { TaskStatus } from "./taskStatus.enum";
-import { GetTasksFilterDto } from "./dtos/getTasksFilterDto";
+import { GetTasksFilterDto } from "./dtos/getTasksFilter.dto";
 import { pagination, Ipagination } from "src/shared/pagination";
 import { InternalServerErrorException } from "@nestjs/common";
 

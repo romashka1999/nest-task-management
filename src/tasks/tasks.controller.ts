@@ -5,7 +5,7 @@ import { TasksService } from './tasks.service';
 import { Task } from './task.entity';
 import { TaskStatusValidationpipe } from './pipes/taskStatusValidationPipe';
 import { CreateTaskDto } from './dtos/createTask.dto';
-import { GetTasksFilterDto } from './dtos/getTasksFilterDto';
+import { GetTasksFilterDto } from './dtos/getTasksFilter.dto';
 
 
 @Controller('tasks')
@@ -15,7 +15,7 @@ export class TasksController {
 
     @Get()
     @UsePipes(ValidationPipe)
-    async getTasks(@Query() getTasksFilterDto: GetTasksFilterDto): Promise<Array<Task>>{
+    getTasks(@Query() getTasksFilterDto: GetTasksFilterDto): Promise<Array<Task>>{
         return this.tasksService.getTasks(getTasksFilterDto);
     }
 

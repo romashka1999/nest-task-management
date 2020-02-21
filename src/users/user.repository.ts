@@ -4,6 +4,8 @@ import { ConflictException, InternalServerErrorException } from "@nestjs/common"
 import { User } from "../auth/user.entity";
 import { SignInDto } from "../auth/dtos/signIn.dto";
 import { hashPassword } from "src/auth/helpers/password";
+import { GetUsersFilterDto } from "./dtos/getUsersFilter.dto";
+import { identity } from "rxjs";
 
 
 @EntityRepository(User)
@@ -44,6 +46,23 @@ export class UserRepository extends Repository<User> {
                     return null;
                 }
             }
+        } catch (error) {
+            throw new InternalServerErrorException(error);
+        }
+    }
+
+    async getUsers(getUsersFilterDto: GetUsersFilterDto): Promise<Array<User>> {
+        const { age } = getUsersFilterDto;
+
+        const query = this.createQueryBuilder('user');
+
+        if(age) {
+            query.andWhere('user.age >= :age', {age: age});
+        }
+
+        try {
+            const users = await query.getMany();
+            return users;
         } catch (error) {
             throw new InternalServerErrorException(error);
         }
