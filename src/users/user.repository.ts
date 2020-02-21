@@ -1,8 +1,8 @@
 import { Repository, EntityRepository } from "typeorm";
 import { ConflictException, InternalServerErrorException } from "@nestjs/common";
 
-import { User } from "./user.entity";
-import { SignInDto } from "./dto/signIn.dto";
+import { User } from "../auth/user.entity";
+import { SignInDto } from "../auth/dtos/signIn.dto";
 import { hashPassword } from "src/auth/helpers/password";
 
 

@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { TaskRepository } from './task.repository';
 import { Task } from './task.entity';
-import { CreateTaskDto } from './dto/createTask.dto';
-import { GetTasksFilterDto } from './dto/getTasksFilterDto';
+import { CreateTaskDto } from './dtos/createTask.dto';
+import { GetTasksFilterDto } from './dtos/getTasksFilterDto';
 
 
 @Injectable()

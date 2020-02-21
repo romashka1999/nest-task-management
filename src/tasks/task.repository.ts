@@ -1,9 +1,9 @@
 import { Repository, EntityRepository } from "typeorm";
 
 import { Task } from "./task.entity";
-import { CreateTaskDto } from "./dto/createTask.dto";
+import { CreateTaskDto } from "./dtos/createTask.dto";
 import { TaskStatus } from "./taskStatus.enum";
-import { GetTasksFilterDto } from "./dto/getTasksFilterDto";
+import { GetTasksFilterDto } from "./dtos/getTasksFilterDto";
 import { pagination, Ipagination } from "src/shared/pagination";
 import { InternalServerErrorException } from "@nestjs/common";
 
@@ -14,19 +14,23 @@ export class TaskRepository extends Repository<Task> {
         const { status, search, page, pageSize } = getTasksFilterDto;
         const query = this.createQueryBuilder('task');
 
-        if(page && pageSize) {
+        query.addOrderBy('ASC'); //ordering ascending
+
+        if(page && pageSize) { //pagination logic
             const { offset, limit } = <Ipagination>pagination(page, pageSize);
             query.offset(offset);
             query.limit(limit);
         }
 
-        if(status) {
-            query.andWhere('task.status = :status', {status: status})
+        // i use query.andWhere method, there is also query.where method ,but query.where method overrides
+        // previous query i want to do all query together :)
+        if(status) { 
+            query.andWhere('task.status = :status', {status: status}) //search by status
         }
 
         if(search) {
             query.andWhere('(task.title LIKE :search OR task.description LIKE :search)', {search: `%${search}%`})
-        }
+        } //search by search word which likes any title or description
 
         try {
             const tasks = await query.getMany();
