@@ -5,7 +5,6 @@ import { User } from "./user.entity";
 import { SignInDto } from "../auth/dtos/signIn.dto";
 import { hashPassword } from "src/modules/auth/helpers/password";
 import { GetUsersFilterDto } from "./dtos/getUsersFilter.dto";
-import { identity } from "rxjs";
 
 
 @EntityRepository(User)

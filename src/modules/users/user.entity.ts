@@ -1,8 +1,9 @@
-import { BaseEntity, PrimaryGeneratedColumn, Column, Entity } from "typeorm";
+import { BaseEntity, PrimaryGeneratedColumn, Column, Entity, Unique } from "typeorm";
 
 import { validatePassword } from '../auth/helpers/password';
 
 @Entity()
+// @Unique(['username', 'email']) -- unque decorator on enity which gets columns array
 export class User extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;

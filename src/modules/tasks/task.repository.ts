@@ -23,7 +23,7 @@ export class TaskRepository extends Repository<Task> {
         }
 
         // i use query.andWhere method, there is also query.where method ,but query.where method overrides
-        // previous query i want to do all query together :)
+        // previous query and i want to do all query together :)
         if(status) { 
             query.andWhere('task.status = :status', {status: status}) //search by status
         }
