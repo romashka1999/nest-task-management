@@ -24,7 +24,7 @@ export class UserRepository extends Repository<User> {
             if(error.code === '23505') {//duplicate username 
                 throw new ConflictException('usarname already exists');
             } else {
-                throw new InternalServerErrorException();
+                throw new InternalServerErrorException(error);
             }
         }
         
@@ -34,13 +34,18 @@ export class UserRepository extends Repository<User> {
     async signIn(signInDto: SignInDto): Promise<User> {
         const { username, password } = signInDto;
 
-        const user = await this.findOne({username: username});
+        try {
+            const user = await this.findOne({username: username});
 
-        if(user && await user.validatePassword(password))
-        if(!user || user.password !== password) {
-            return user;
-        } else {
-            return null;
+            if(user && await user.validatePassword(password)) {
+                if(!user || user.password !== password) {
+                    return user;
+                } else {
+                    return null;
+                }
+            }
+        } catch (error) {
+            throw new InternalServerErrorException(error);
         }
     }
 }

@@ -21,12 +21,15 @@ export class TasksService {
             const task = await this.taskRepository.findOne(id); 
 
             if(!task) {
-                throw new NotFoundException(`task with id - ${id} does not exist`)
+                throw new NotFoundException(`task with id - ${id} does not exist`);
             } 
 
             return task;
         } catch (error) {
-            throw new InternalServerErrorException(error);
+            if(!error.status) {
+                throw new InternalServerErrorException(error);
+            }
+            throw error;
         }
     }
 
@@ -55,7 +58,10 @@ export class TasksService {
 
             return true;
         } catch (error) {
-            throw new InternalServerErrorException(error);
+            if(!error.status) {
+                throw new InternalServerErrorException(error);
+            }
+            throw error;
         }
     }
 
