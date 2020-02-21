@@ -1,6 +1,6 @@
 import { BaseEntity, PrimaryGeneratedColumn, Column, Entity } from "typeorm";
 
-import { validatePassword } from './helpers/password';
+import { validatePassword } from '../auth/helpers/password';
 
 @Entity()
 export class User extends BaseEntity {
