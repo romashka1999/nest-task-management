@@ -1,9 +1,11 @@
-import { Repository, EntityRepository } from "typeorm"
+import { Repository, EntityRepository } from "typeorm";
+
 import { Task } from "./task.entity";
 import { CreateTaskDto } from "./dto/createTask.dto";
 import { TaskStatus } from "./taskStatus.enum";
 import { GetTasksFilterDto } from "./dto/getTasksFilterDto";
 import { pagination, Ipagination } from "src/shared/pagination";
+import { InternalServerErrorException } from "@nestjs/common";
 
 @EntityRepository(Task)
 export class TaskRepository extends Repository<Task> {
@@ -26,8 +28,12 @@ export class TaskRepository extends Repository<Task> {
             query.andWhere('(task.title LIKE :search OR task.description LIKE :search)', {search: `%${search}%`})
         }
 
-        const tasks = await query.getMany();
-        return tasks;
+        try {
+            const tasks = await query.getMany();
+            return tasks;
+        } catch (error) {
+            throw new InternalServerErrorException(error);
+        }
     }
 
     public async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
@@ -38,8 +44,11 @@ export class TaskRepository extends Repository<Task> {
         task.description = description;
         task.status = TaskStatus.OPEN;
 
-        await task.save();
-
-        return task;
+        try {
+            await task.save();
+            return task;
+        } catch (error) {
+            throw new InternalServerErrorException(error);
+        }
     }
 }

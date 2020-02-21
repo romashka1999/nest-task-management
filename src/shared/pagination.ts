@@ -8,7 +8,7 @@ export const pagination = <Ipagination>(page: number, pageSize: number) => {
     const limit = pageSize;
 
     return {
-        offset, //start index point data fetching
+        offset,//start index point data fetching
         limit //limit data
     }
 }

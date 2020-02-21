@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
-import { TaskRepository } from './task.repository';
 import { InjectRepository } from '@nestjs/typeorm';
+
+import { TaskRepository } from './task.repository';
 import { Task } from './task.entity';
 import { CreateTaskDto } from './dto/createTask.dto';
 import { GetTasksFilterDto } from './dto/getTasksFilterDto';
@@ -16,13 +17,17 @@ export class TasksService {
     }
 
     async getTaskById(id: number): Promise<Task> {
-        const task = await this.taskRepository.findOne(id); // 
+        try {
+            const task = await this.taskRepository.findOne(id); 
 
-        if(!task) {
-            throw new NotFoundException(`task with id - ${id} does not exist`)
-        } 
+            if(!task) {
+                throw new NotFoundException(`task with id - ${id} does not exist`)
+            } 
 
-        return task;
+            return task;
+        } catch (error) {
+            throw new InternalServerErrorException(error);
+        }
     }
 
     async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
@@ -32,18 +37,26 @@ export class TasksService {
     async updateTaskStatusById(id: number, status: string): Promise<Task> {
         const task = await this.getTaskById(id);
         task.status = status;
-        await task.save();
-        return task;
+        try {
+            await task.save();
+            return task;
+        } catch (error) {
+            throw new InternalServerErrorException(error);
+        }
     }
 
     async deleteTaskById(id: number): Promise<boolean> {
-        const deletedTask = await this.taskRepository.delete(id);
+        try {
+            const deletedTask = await this.taskRepository.delete(id);
 
-        if(!deletedTask.affected) {
-            throw new NotFoundException(`task with id - ${id} does not exist`)
+            if(!deletedTask.affected) {
+                throw new NotFoundException(`task with id - ${id} does not exist`)
+            }
+
+            return true;
+        } catch (error) {
+            throw new InternalServerErrorException(error);
         }
-
-        return true;
     }
 
 

@@ -1,4 +1,5 @@
 import * as bcryptjs from 'bcryptjs';
+
 import { User } from 'src/auth/user.entity';
 
 export const hashPassword = async (password: string):Promise<{salt: string, hashedPassword: string}> => {
