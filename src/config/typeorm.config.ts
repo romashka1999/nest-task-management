@@ -1,14 +1,17 @@
 import { join } from 'path';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import * as config from 'config';
+
+const dbCFG = config.get('db');
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
-    type: 'postgres',
-    host: 'localhost',
-    port: 5432,
-    username: 'postgres',
-    password: 'ibanez123',
-    database: 'taskmanagement',
+    type: dbCFG.type,
+    host: dbCFG.host,
+    port: dbCFG.port,
+    username: dbCFG.username,
+    password: dbCFG.password,
+    database: dbCFG.database,
     entities: [join(__dirname, '/../**/*.entity{.ts,.js}')],
-    synchronize: true,
-    logging: false
+    synchronize: dbCFG.synchronize,
+    logging: dbCFG.logging
 }

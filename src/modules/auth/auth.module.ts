@@ -8,6 +8,9 @@ import { AuthService } from './auth.service';
 import { UserRepository } from '../users/user.repository';
 import { JwtStrategy } from './jwt.strategy';
 
+import * as config from 'config';
+
+const jwtCFG = config.get('jwt');
 
 @Module({
   imports: [
@@ -15,9 +18,9 @@ import { JwtStrategy } from './jwt.strategy';
       defaultStrategy: 'jwt'
     }),
     JwtModule.register({
-      secret: 'secret',
+      secret: jwtCFG.secret,
       signOptions: {
-        expiresIn: 3600 //seconds
+        expiresIn: jwtCFG.expiresIn //seconds
       }
     }),
     TypeOrmModule.forFeature([UserRepository])

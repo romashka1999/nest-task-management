@@ -6,12 +6,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from '../users/user.repository';
 import { User } from '../users/user.entity';
 
+import * as config from 'config';
+
+const jwtCFG = config.get('jwt');
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
     constructor(@InjectRepository(UserRepository) private readonly userRepository: UserRepository) {
         super({
             jwtFromRequest: ExtractJwt.fromHeader('token'),
-            secretOrKey: 'secret',
+            secretOrKey: jwtCFG.secret,
         });
     }
 
