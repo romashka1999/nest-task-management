@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, NotFoundException, InternalServerErrorException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { TaskRepository } from './task.repository';
@@ -11,6 +11,7 @@ import { User } from '../users/user.entity';
 @Injectable()
 export class TasksService {
 
+    private readonly logger = new Logger('TasksService');
     constructor(@InjectRepository(TaskRepository) private taskRepository: TaskRepository) {}
 
     async getTasks(getTasksFilterDto: GetTasksFilterDto, user: User) {
@@ -27,6 +28,7 @@ export class TasksService {
             }); 
 
             if(!task) {
+                this.logger.error(`task with id - ${id} does not exist`);
                 throw new NotFoundException(`task with id - ${id} does not exist`);
             } 
 
