@@ -6,14 +6,16 @@ import { TaskStatus } from "./taskStatus.enum";
 import { GetTasksFilterDto } from "./dtos/getTasksFilter.dto";
 import { pagination, Ipagination } from "src/shared/pagination";
 import { InternalServerErrorException } from "@nestjs/common";
+import { User } from "../users/user.entity";
 
 @EntityRepository(Task)
 export class TaskRepository extends Repository<Task> {
 
-    public async getTasks(getTasksFilterDto: GetTasksFilterDto): Promise<Array<Task>> {
+    public async getTasks(getTasksFilterDto: GetTasksFilterDto, user: User): Promise<Array<Task>> {
         const { status, search, page, pageSize } = getTasksFilterDto;
         const query = this.createQueryBuilder('task');
-
+        
+        query.where('task.userId = :userId', {userId: user.id}) // filter with user id
 
         if(page && pageSize) { //pagination logic
             const { offset, limit } = <Ipagination>pagination(page, pageSize);
@@ -39,16 +41,18 @@ export class TaskRepository extends Repository<Task> {
         }
     }
 
-    public async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
+    public async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
         const task = new Task();
 
         const { title, description } = createTaskDto;
         task.title = title;
         task.description = description;
         task.status = TaskStatus.OPEN;
+        task.user = user;
 
         try {
             await task.save();
+            delete task.user; //delete task.user , because return only pure task
             return task;
         } catch (error) {
             throw new InternalServerErrorException(error);
