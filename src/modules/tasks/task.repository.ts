@@ -14,7 +14,6 @@ export class TaskRepository extends Repository<Task> {
         const { status, search, page, pageSize } = getTasksFilterDto;
         const query = this.createQueryBuilder('task');
 
-        query.addOrderBy('ASC'); //ordering ascending
 
         if(page && pageSize) { //pagination logic
             const { offset, limit } = <Ipagination>pagination(page, pageSize);

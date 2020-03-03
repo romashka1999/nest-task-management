@@ -1,5 +1,7 @@
 import { Controller, Get, Post, Body, Param, Delete, Patch, Query,
-UsePipes, ValidationPipe, ParseIntPipe } from '@nestjs/common';
+UsePipes, ValidationPipe, ParseIntPipe, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+
 
 import { TasksService } from './tasks.service';
 import { Task } from './task.entity';
@@ -9,6 +11,7 @@ import { GetTasksFilterDto } from './dtos/getTasksFilter.dto';
 
 
 @Controller('tasks')
+@UseGuards(AuthGuard())
 export class TasksController {
 
     constructor(private tasksService: TasksService) {}
@@ -42,6 +45,4 @@ export class TasksController {
     deleteTaskById(@Param('id', ParseIntPipe) id: number): Promise<boolean> {
         return this.tasksService.deleteTaskById(id);
     }
-    
-    
 }
